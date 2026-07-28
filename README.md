@@ -2,14 +2,9 @@
 
 ## Intelligent Smart Restaurant Management System
 
-Suvai OS is a full-stack restaurant management platform designed to digitize restaurant operations by connecting customers, kitchen staff, and managers through a unified system.
+Suvai OS is a full-stack restaurant management platform developed for **VibeAthon 6.0 (2K26)** under the **Smart Restaurant Management System** problem statement.
 
-The platform provides a digital customer ordering experience along with a management dashboard for managing orders, inventory, tables, staff, customers, analytics, and intelligent recommendations.
-
-## Built For
-
-**VibeAthon 6.0 (2K26)**
-**Problem Statement: Smart Restaurant Management System**
+It streamlines restaurant operations by connecting customers, kitchen staff, and restaurant managers through a single digital platform. Customers can browse menus, place orders, reserve tables, and track their orders, while administrators can efficiently manage orders, inventory, tables, staff, customers, and analytics.
 
 ---
 
@@ -27,7 +22,8 @@ The platform provides a digital customer ordering experience along with a manage
 * Node.js
 * Next.js API Routes
 * Recharts
-* In-memory JavaScript Store (Supabase-ready architecture)
+* JavaScript
+* In-memory Data Store (Supabase-ready architecture)
 * Google OAuth Authentication
 * Resend API
 * AI Recommendation Engine
@@ -36,47 +32,40 @@ The platform provides a digital customer ordering experience along with a manage
 
 # User Stories Completed
 
-* Customers can browse a digital menu and view available dishes.
-* Customers can add food items to cart and place orders.
-* Customers can reserve tables through the reservation system.
-* Customers can track their order status.
-* Users can register and login using email/password authentication.
-* Role-based authentication is implemented for customers and administrators.
-* Restaurant managers can manage orders through a kitchen workflow.
-* Managers can update menu items, prices, availability, and stock details.
-* Managers can monitor inventory and low-stock alerts.
-* Managers can manage restaurant tables and reservations.
-* Managers can manage staff information.
-* Managers can view customer information and restaurant analytics.
-* AI-powered recommendations suggest dishes based on customer activity.
+* Digital menu with live dish availability
+* Customer registration and login
+* Online food ordering
+* Shopping cart management
+* Smart table reservation
+* Order status tracking
+* Admin dashboard
+* Kitchen order workflow management
+* Menu management
+* Inventory management with low-stock alerts
+* Table management
+* Staff management
+* Customer management
+* Restaurant analytics dashboard
+* AI-powered food recommendations
 
 ---
 
 # AI Usage
 
-Suvai OS uses an AI-based recommendation engine to enhance customer experience.
+Suvai OS includes an AI-powered recommendation engine that analyzes customer order history, food preferences, and popular menu items to provide personalized dish recommendations.
 
-The recommendation system analyzes restaurant data such as:
+The system is designed to support future AI enhancements such as:
 
-* Customer order history
-* Popular dishes
-* Menu activity
-* Customer preferences
-
-Based on this information, the system provides personalized food recommendations.
-
-Future enhancements include:
-
-* AI-based demand forecasting
+* Demand forecasting
 * Smart inventory prediction
 * Sales trend analysis
-* Advanced restaurant insights
+* Restaurant performance insights
 
 ---
 
 # Hosted Application
 
-Live Demo:
+**Live Demo**
 
 https://suvai-smart-restaurant.vercel.app
 
@@ -84,9 +73,23 @@ https://suvai-smart-restaurant.vercel.app
 
 # Repository
 
-GitHub Repository:
+**GitHub Repository**
 
 https://github.com/Nandhika115/suvai-smart-restaurant
+
+---
+
+# Demo Credentials
+
+## Admin
+
+**Email:** `admin@smartbistro.app`
+**Password:** `admin123`
+
+## Customer
+
+**Email:** `guest@smartbistro.app`
+**Password:** `demo123`
 
 ---
 
@@ -94,13 +97,13 @@ https://github.com/Nandhika115/suvai-smart-restaurant
 
 ## Customer Module
 
-* Digital restaurant menu
-* Food availability tracking
-* Cart management
-* Online ordering
-* Table reservation
-* Order tracking
-* Customer authentication
+* Browse digital menu
+* View food availability
+* Add items to cart
+* Place food orders
+* Reserve restaurant tables
+* Track order status
+* User authentication
 
 ## Restaurant Management Module
 
@@ -108,31 +111,29 @@ https://github.com/Nandhika115/suvai-smart-restaurant
 * Order management
 * Kitchen workflow tracking
 * Menu management
-* Inventory monitoring
-* Low-stock alerts
+* Inventory management
+* Low-stock monitoring
 * Table management
 * Staff management
 * Customer management
-* Restaurant analytics dashboard
+* Analytics dashboard
 
 ## Intelligent Features
 
-* AI-based food recommendations
-* Personalized menu suggestions
-* Inventory insights
-* Restaurant performance analytics
+* Personalized AI-based food recommendations
+* Smart customer experience
+* Restaurant performance insights
+* Operational analytics
 
 ---
 
 # How It Works
 
-Suvai OS connects:
+Suvai OS connects the complete restaurant workflow:
 
 **Customer → Kitchen → Restaurant Manager**
 
-Customers can browse the menu, place orders, and track order progress. The restaurant team can manage incoming orders, update menu availability, monitor inventory, and analyze operations through the admin dashboard.
-
-The platform helps restaurants improve efficiency through digital workflows and intelligent decision-making.
+Customers can browse the menu, place food orders, reserve tables, and track order progress. Restaurant staff process and update orders, while managers monitor operations through an integrated dashboard for orders, inventory, tables, customers, staff, and analytics.
 
 ---
 
@@ -140,13 +141,13 @@ The platform helps restaurants improve efficiency through digital workflows and 
 
 Suvai OS helps restaurants:
 
-* Reduce manual order management
-* Improve customer experience
 * Digitize restaurant operations
+* Improve customer experience
+* Reduce manual order handling
+* Streamline kitchen workflows
 * Manage inventory efficiently
-* Track orders effectively
+* Monitor restaurant performance
 * Make data-driven decisions
-* Improve overall operational efficiency
 
 ---
 
@@ -154,31 +155,31 @@ Suvai OS helps restaurants:
 
 ```text
 app/
- ├── Customer pages
- ├── Admin dashboard
- ├── API routes
- └── Authentication routes
+ ├── Customer Pages
+ ├── Admin Dashboard
+ ├── API Routes
+ └── Authentication
 
 components/
- └── Reusable UI components
+ └── Shared UI Components
 
 lib/
- ├── Authentication logic
- ├── Session handling
- ├── Data store management
- └── Utility functions
+ ├── Authentication
+ ├── Session Management
+ ├── Data Store
+ └── Utility Functions
 
 public/
- └── Restaurant food images
+ └── Restaurant Images
 ```
 
 ---
 
 # Deployment
 
-The application is deployed using Vercel.
+The application is deployed using **Vercel**.
 
-Deployment URL:
+**Production URL**
 
 https://suvai-smart-restaurant.vercel.app
 
@@ -186,8 +187,10 @@ https://suvai-smart-restaurant.vercel.app
 
 # Future Enhancements
 
-* Real-time database integration using Supabase/PostgreSQL
-* Advanced AI demand prediction
-* Real-time kitchen synchronization
+* Persistent database using Supabase/PostgreSQL
+* Complete Google OAuth configuration
+* Real-time order synchronization
 * Online payment integration
+* AI-based demand forecasting
+* Smart inventory prediction
 * Mobile application support
