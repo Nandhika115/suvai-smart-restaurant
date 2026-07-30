@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suvai Restaurant Menu</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <header class="sticky-header">
+        <h1>Suvai Restaurant</h1>
+        <div class="cart-icon">
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <h2>Welcome to Suvai</h2>
+        <p>Delicious food delivered to your door.</p>
+    </section>
+    
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search menu...">
+        <button id="filter-veg">Vegetarian</button>
+        <button id="filter-nonveg">Non-Vegetarian</button>
+    </div>
+    
+    <div class="results-count">
+        <span id="results-text">Showing all items</span>
+    </div>
+    
+    <div class="card-grid" id="menu-items">
+        <!-- Menu items will be dynamically inserted here -->
+    </div>
+    
+    <div class="cart-drawer" id="cart-drawer">
+        <h3>Your Cart</h3>
+        <div id="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-total">
+            <span>Total: $<span id="cart-total">0.00</span></span>
+        </div>
+        <button id="checkout">Checkout</button>
+    </div>
+    
+    <script src="src/data/menu.js"></script>
+    <script src="src/js/cart.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
+</html>

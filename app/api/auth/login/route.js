@@ -1,19 +1,99 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getStore } from "../../../../lib/store";
+import { supabase } from "../../../../lib/supabase";
 import { verifyPassword, sign, SESSION_COOKIE } from "../../../../lib/auth";
 
 export async function POST(req) {
-  const { email, password } = await req.json();
-  const store = getStore();
-  const user = store.users.find((u) => u.email.toLowerCase() === (email || "").toLowerCase());
 
-  if (!user || !verifyPassword(password, user.passwordHash)) {
-    return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+  const { email, password } = await req.json();
+
+
+  if (!email || !password) {
+    return NextResponse.json(
+      { error: "Email and password are required." },
+      { status: 400 }
+    );
   }
 
-  const token = sign({ uid: user.id });
-  cookies().set(SESSION_COOKIE, token, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7 });
 
-  return NextResponse.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedPassword = password.trim();
+
+
+
+  // Find user from Supabase
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", normalizedEmail)
+    .single();
+
+
+
+  console.log("LOGIN EMAIL:", normalizedEmail);
+  console.log("SUPABASE ERROR:", error);
+  console.log("USER FOUND:", user ? user.email : "NO USER");
+
+
+
+  if (error || !user) {
+    return NextResponse.json(
+      { error: "Invalid email or password." },
+      { status: 401 }
+    );
+  }
+
+
+
+  // Check password
+  const passwordMatch = verifyPassword(
+    normalizedPassword,
+    user.password_hash
+  );
+
+
+  console.log("PASSWORD CHECK:", passwordMatch);
+
+
+
+  if (!passwordMatch) {
+    return NextResponse.json(
+      { error: "Invalid email or password." },
+      { status: 401 }
+    );
+  }
+
+
+
+  // Create session using UUID
+  const token = sign({
+    uid: user.id
+  });
+
+
+
+  cookies().set(
+    SESSION_COOKIE,
+    token,
+    {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    }
+  );
+
+
+
+  return NextResponse.json({
+
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+
+  });
+
 }

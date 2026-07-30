@@ -1,0 +1,22 @@
+{
+  "name": "suvai-menu",
+  "version": "1.0.0",
+  "description": "A responsive food ordering menu web page for Suvai restaurant with a warm dark theme.",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server ."
+  },
+  "keywords": [
+    "restaurant",
+    "menu",
+    "food",
+    "ordering",
+    "responsive"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

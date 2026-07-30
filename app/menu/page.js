@@ -68,6 +68,12 @@ export default function MenuPage() {
   );
 
 
+  // Best Sellers (demo - first 3 available items)
+  const bestSellers = menu
+    .filter((item) => item.available)
+    .slice(0, 3);
+
+
 
   function handleAdd(item) {
 
@@ -101,6 +107,59 @@ export default function MenuPage() {
         <p className="mt-1 text-sm text-char-400">
           Fresh dishes prepared by Suvai Restaurant.
         </p>
+
+
+
+        {/* BEST SELLERS */}
+
+        {!loading && bestSellers.length > 0 && (
+
+          <section className="mt-8">
+
+            <h2 className="font-display text-2xl font-semibold text-char-50">
+              🔥 Best Sellers
+            </h2>
+
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+
+              {bestSellers.map((item) => (
+
+                <div
+                  key={item.id}
+                  className="rounded-ticket border border-saffron-400/30 bg-char-850 p-4"
+                >
+
+                 <img
+  src={item.image}
+  alt={item.name}
+  className="h-48 w-full rounded-ticket object-cover"
+/>
+
+
+                  <h3 className="mt-3 font-semibold text-char-50">
+                    {item.name}
+                  </h3>
+
+
+                  <p className="mt-1 text-saffron-400">
+                    ₹{item.price}
+                  </p>
+
+
+                  <p className="mt-2 text-xs text-green-400">
+                    Available ✅
+                  </p>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </section>
+
+        )}
 
 
 
@@ -142,7 +201,6 @@ export default function MenuPage() {
 
 
         <div className="mt-6 flex flex-wrap items-center gap-2">
-
 
           {categories.map((c) => (
 
@@ -210,9 +268,6 @@ export default function MenuPage() {
                 }`}
               >
 
-
-                {/* Dish Image */}
-
                 <div className="relative">
 
                   <img
@@ -228,32 +283,21 @@ export default function MenuPage() {
                         ? "bg-sage-400"
                         : "bg-chili-400"
                     }`}
-                    title={
-                      item.veg
-                        ? "Veg"
-                        : "Non Veg"
-                    }
                   />
 
                 </div>
 
 
 
-
                 <h3 className="mt-4 font-display text-lg font-semibold text-char-50">
-
                   {item.name}
-
                 </h3>
 
 
 
                 <p className="mt-1 text-sm text-char-400">
-
                   {item.description}
-
                 </p>
-
 
 
 
@@ -261,9 +305,7 @@ export default function MenuPage() {
 
 
                   <span className="font-mono text-char-100">
-
                     ₹{item.price}
-
                   </span>
 
 
@@ -286,9 +328,7 @@ export default function MenuPage() {
 
 
                     <span className="font-mono text-xs uppercase tracking-wide text-chili-400">
-
                       Sold out
-
                     </span>
 
 
@@ -299,14 +339,11 @@ export default function MenuPage() {
 
 
 
-
                 {item.available &&
                   item.stock <= 5 && (
 
                   <p className="mt-2 font-mono text-xs text-saffron-400">
-
                     Only {item.stock} left today
-
                   </p>
 
                 )}
