@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { supabase } from "../../../../lib/supabase";
-import { verifyPassword, sign, SESSION_COOKIE } from "../../../../lib/auth";
+
+const {
+  verifyPassword,
+  sign,
+  SESSION_COOKIE
+} = require("../../../../lib/auth");
 
 
 export const runtime = "nodejs";
@@ -10,7 +15,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req) {
 
-  const { email, password } = await req.json();
+  const { email, password } =
+    await req.json();
 
 
   if (!email || !password) {
@@ -31,6 +37,7 @@ export async function POST(req) {
   const normalizedEmail =
     email.trim().toLowerCase();
 
+
   const normalizedPassword =
     password.trim();
 
@@ -41,14 +48,28 @@ export async function POST(req) {
     await supabase
       .from("users")
       .select("*")
-      .eq("email", normalizedEmail)
+      .eq(
+        "email",
+        normalizedEmail
+      )
       .single();
 
 
 
-  console.log("LOGIN EMAIL:", normalizedEmail);
-  console.log("SUPABASE ERROR:", error);
-  console.log("USER FOUND:", user ? user.email : "NO USER");
+  console.log(
+    "LOGIN EMAIL:",
+    normalizedEmail
+  );
+
+  console.log(
+    "SUPABASE ERROR:",
+    error
+  );
+
+  console.log(
+    "USER FOUND:",
+    user ? user.email : "NO USER"
+  );
 
 
 
@@ -69,6 +90,7 @@ export async function POST(req) {
 
 
 
+
   const passwordMatch =
     verifyPassword(
       normalizedPassword,
@@ -81,6 +103,7 @@ export async function POST(req) {
     "PASSWORD CHECK:",
     passwordMatch
   );
+
 
 
 
@@ -110,7 +133,9 @@ export async function POST(req) {
 
 
 
-  const cookieStore = cookies();
+
+  const cookieStore =
+    cookies();
 
 
   cookieStore.set(
@@ -143,6 +168,5 @@ export async function POST(req) {
     },
 
   });
-
 
 }
