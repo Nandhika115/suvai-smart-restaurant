@@ -3,30 +3,46 @@ import { cookies } from "next/headers";
 import { supabase } from "../../../../lib/supabase";
 import { verifyPassword, sign, SESSION_COOKIE } from "../../../../lib/auth";
 
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+
 export async function POST(req) {
 
   const { email, password } = await req.json();
 
 
   if (!email || !password) {
+
     return NextResponse.json(
-      { error: "Email and password are required." },
-      { status: 400 }
+      {
+        error: "Email and password are required."
+      },
+      {
+        status: 400
+      }
     );
+
   }
 
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const normalizedPassword = password.trim();
+
+  const normalizedEmail =
+    email.trim().toLowerCase();
+
+  const normalizedPassword =
+    password.trim();
 
 
 
-  // Find user from Supabase
-  const { data: user, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", normalizedEmail)
-    .single();
+
+  const { data: user, error } =
+    await supabase
+      .from("users")
+      .select("*")
+      .eq("email", normalizedEmail)
+      .single();
 
 
 
@@ -36,43 +52,68 @@ export async function POST(req) {
 
 
 
+
   if (error || !user) {
+
     return NextResponse.json(
-      { error: "Invalid email or password." },
-      { status: 401 }
+      {
+        error: "Invalid email or password."
+      },
+      {
+        status: 401
+      }
     );
+
   }
 
 
 
-  // Check password
-  const passwordMatch = verifyPassword(
-    normalizedPassword,
-    user.password_hash
+
+  const passwordMatch =
+    verifyPassword(
+      normalizedPassword,
+      user.password_hash
+    );
+
+
+
+  console.log(
+    "PASSWORD CHECK:",
+    passwordMatch
   );
 
-
-  console.log("PASSWORD CHECK:", passwordMatch);
 
 
 
   if (!passwordMatch) {
+
     return NextResponse.json(
-      { error: "Invalid email or password." },
-      { status: 401 }
+      {
+        error: "Invalid email or password."
+      },
+      {
+        status: 401
+      }
     );
+
   }
 
 
 
-  // Create session using UUID
-  const token = sign({
-    uid: user.id
-  });
+
+
+  const token =
+    sign({
+      uid: user.id
+    });
 
 
 
-  cookies().set(
+
+  const cookieStore = cookies();
+
+
+  cookieStore.set(
     SESSION_COOKIE,
     token,
     {
@@ -85,15 +126,23 @@ export async function POST(req) {
 
 
 
+
+
   return NextResponse.json({
 
     user: {
+
       id: user.id,
+
       name: user.name,
+
       email: user.email,
+
       role: user.role,
+
     },
 
   });
+
 
 }
