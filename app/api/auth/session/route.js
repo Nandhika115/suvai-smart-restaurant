@@ -12,19 +12,23 @@ export async function GET() {
 
   const token = cookieStore.get(SESSION_COOKIE)?.value;
 
+  console.log("SESSION TOKEN:", token);
+
+
   if (!token) {
-    return NextResponse.json({
-      user: null,
-    });
+    console.log("NO COOKIE FOUND");
+    return NextResponse.json({ user: null });
   }
 
 
   const payload = verify(token);
 
+  console.log("PAYLOAD:", payload);
+
+
   if (!payload) {
-    return NextResponse.json({
-      user: null,
-    });
+    console.log("INVALID TOKEN");
+    return NextResponse.json({ user: null });
   }
 
 
@@ -35,24 +39,12 @@ export async function GET() {
     .single();
 
 
+  console.log("USER:", user);
+  console.log("SUPABASE ERROR:", error);
+
+
   if (error || !user) {
-    return NextResponse.json({
-      user: null,
-    });
-  }
-
-
-  const { count, error: orderError } = await supabase
-    .from("orders")
-    .select("id", {
-      count: "exact",
-      head: true,
-    })
-    .eq("customer_id", user.id);
-
-
-  if (orderError) {
-    console.log("ORDER COUNT ERROR:", orderError);
+    return NextResponse.json({ user: null });
   }
 
 
@@ -63,7 +55,6 @@ export async function GET() {
       email: user.email,
       role: user.role,
       avatar_url: user.avatar_url || null,
-      totalOrders: count || 0,
     },
   });
 }

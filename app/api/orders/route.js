@@ -2,66 +2,18 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 
 import { supabase } from "../../../lib/supabase";
-import { verify, SESSION_COOKIE } from "../../../lib/auth";
-import { cookies } from "next/headers";
+import { getSession } from "../../../lib/session";
 
 
-// GET CURRENT SESSION
-async function getSession() {
-
-  const cookieStore = cookies();
-
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
-
-
-  if (!token) {
-    return null;
-  }
-
-
-  const payload = verify(token);
-
-
-  if (!payload) {
-    return null;
-  }
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 
 
-  const { data: user, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", payload.uid)
-    .single();
-
-
-
-  if (error || !user) {
-    console.log("SESSION ERROR:", error);
-    return null;
-  }
-
-
-
-  return {
-  id: user.id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  avatar_url: user.avatar_url,
-};
-}
-
-
-
-// ======================
 // GET ORDERS
-// ======================
-
 export async function GET() {
 
   const session = await getSession();
-
 
 
   if (!session) {
@@ -79,7 +31,6 @@ export async function GET() {
 
 
 
-
   let query = supabase
     .from("orders")
     .select("*")
@@ -89,8 +40,6 @@ export async function GET() {
 
 
 
-  // Customer sees only own orders
-  // Admin sees all orders
   if (session.role !== "admin") {
 
     query = query.eq(
@@ -99,7 +48,6 @@ export async function GET() {
     );
 
   }
-
 
 
 
@@ -122,8 +70,6 @@ export async function GET() {
 
 
 
-
-  // Convert database fields to frontend fields
   const orders = data.map((order) => ({
 
     id: order.id,
@@ -153,12 +99,9 @@ export async function GET() {
 
 
 
-
-
   return NextResponse.json({
     orders
   });
-
 
 }
 
@@ -166,16 +109,10 @@ export async function GET() {
 
 
 
-
-
-// ======================
 // PLACE ORDER
-// ======================
-
 export async function POST(req) {
 
   try {
-
 
     const session = await getSession();
 
@@ -196,17 +133,11 @@ export async function POST(req) {
 
 
 
-
-
     const {
       items,
       tableId,
       notes
-
     } = await req.json();
-
-
-
 
 
 
@@ -225,9 +156,6 @@ export async function POST(req) {
 
 
 
-
-
-
     const total = items.reduce(
       (sum, item) =>
         sum + item.price * item.qty,
@@ -236,47 +164,28 @@ export async function POST(req) {
 
 
 
-
-
-
     const order = {
 
-
-      id:
-        crypto.randomUUID(),
-
+      id: crypto.randomUUID(),
 
       customer_id:
         session.id,
 
-
       customer_name:
         session.name,
-
-
 
       table_id:
         tableId || null,
 
-
-
       items,
-
-
 
       status:
         "received",
 
-
-
       total,
-
-
 
       notes:
         notes || "",
-
-
 
       created_at:
         new Date().toISOString()
@@ -286,27 +195,15 @@ export async function POST(req) {
 
 
 
-
-
-
     const { data, error } = await supabase
-
       .from("orders")
-
       .insert(order)
-
       .select()
-
       .single();
 
 
 
-
-
-
-
     if (error) {
-
 
       console.error(
         "ORDER INSERT ERROR:",
@@ -327,27 +224,18 @@ export async function POST(req) {
 
 
 
-
-
-
     return NextResponse.json(
-
       {
         order: data
       },
-
       {
         status: 201
       }
-
     );
 
 
 
-
-
   } catch (err) {
-
 
     console.error(
       "ORDER API ERROR:",
@@ -356,17 +244,13 @@ export async function POST(req) {
 
 
     return NextResponse.json(
-
       {
         error: err.message
       },
-
       {
         status: 500
       }
-
     );
-
 
   }
 

@@ -1,31 +1,135 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { SESSION_COOKIE, verify } from "../../../../lib/auth";
 import { getStore } from "../../../../lib/store";
-import { getSession } from "../../../../lib/session";
 
-export async function PATCH(req, { params }) {
-  const session = getSession();
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
+
+async function checkAdmin() {
+
+  const cookieStore = await cookies();
+
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+
+  const session = verify(token);
+
+
   if (!session || session.role !== "admin") {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+    return null;
   }
-  const updates = await req.json();
-  const store = getStore();
-  const item = store.menu.find((m) => m.id === params.id);
-  if (!item) return NextResponse.json({ error: "Menu item not found." }, { status: 404 });
 
-  Object.assign(item, updates);
-  // Live availability follows stock automatically unless explicitly overridden.
-  if (updates.stock !== undefined && updates.available === undefined) {
-    item.available = item.stock > 0;
-  }
-  return NextResponse.json({ item });
+
+  return session;
 }
 
-export async function DELETE(req, { params }) {
-  const session = getSession();
-  if (!session || session.role !== "admin") {
-    return NextResponse.json({ error: "Admin access required." }, { status: 403 });
+
+
+export async function PATCH(req, { params }) {
+
+  const session = await checkAdmin();
+
+
+  if (!session) {
+    return NextResponse.json(
+      {
+        error: "Admin access required."
+      },
+      {
+        status: 403
+      }
+    );
   }
+
+
+
+  const updates = await req.json();
+
+
   const store = getStore();
-  store.menu = store.menu.filter((m) => m.id !== params.id);
-  return NextResponse.json({ ok: true });
+
+
+
+  const item = store.menu.find(
+    (m) => m.id === params.id
+  );
+
+
+
+  if (!item) {
+
+    return NextResponse.json(
+      {
+        error: "Menu item not found."
+      },
+      {
+        status: 404
+      }
+    );
+
+  }
+
+
+
+  Object.assign(item, updates);
+
+
+
+  // Auto update availability based on stock
+  if (
+    updates.stock !== undefined &&
+    updates.available === undefined
+  ) {
+
+    item.available = item.stock > 0;
+
+  }
+
+
+
+  return NextResponse.json({
+    item
+  });
+
+}
+
+
+
+
+export async function DELETE(req, { params }) {
+
+  const session = await checkAdmin();
+
+
+  if (!session) {
+
+    return NextResponse.json(
+      {
+        error: "Admin access required."
+      },
+      {
+        status: 403
+      }
+    );
+
+  }
+
+
+
+  const store = getStore();
+
+
+
+  store.menu =
+    store.menu.filter(
+      (m) => m.id !== params.id
+    );
+
+
+
+  return NextResponse.json({
+    ok: true
+  });
+
 }

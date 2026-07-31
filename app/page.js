@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import { supabase } from "../lib/supabase";
+import { getStore } from "../lib/store";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +14,10 @@ export default async function HomePage() {
 
   const featured = menu || [];
 
-  // Temporary value until reservations table is connected
-  const openTables = 0;
+  const store = getStore();
+  const openTables = store.tables.filter(
+    (table) => table.status === "available"
+  ).length;
 
   return (
     <main className="min-h-screen bg-char-900">

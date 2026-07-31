@@ -1,6 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getSession } from "../../lib/session";
 import AdminTopbar from "../../components/AdminTopbar";
 
 const NAV = [
@@ -14,9 +16,22 @@ const NAV = [
 ];
 
 export default function AdminLayout({ children }) {
-  const session = getSession();
-  if (!session || session.role !== "admin") {
-    redirect("/login?next=/admin");
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/auth/session")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.user || data.user.role !== "admin") {
+          redirect("/login?next=/admin");
+        }
+
+        setSession(data.user);
+      });
+  }, []);
+
+  if (!session) {
+    return <p className="p-6 text-char-400">Loading...</p>;
   }
 
   return (
@@ -26,8 +41,11 @@ export default function AdminLayout({ children }) {
           <p className="font-display text-lg font-semibold text-char-50">
             Suvai <span className="text-saffron-400">OS</span>
           </p>
-          <p className="font-mono text-xs text-char-400">Management console</p>
+          <p className="font-mono text-xs text-char-400">
+            Management console
+          </p>
         </div>
+
         <nav className="flex flex-col gap-1 px-3">
           {NAV.map((item) => (
             <Link
@@ -40,6 +58,7 @@ export default function AdminLayout({ children }) {
           ))}
         </nav>
       </aside>
+
       <div className="flex-1">
         <AdminTopbar name={session.name} />
         <div className="p-6">{children}</div>
